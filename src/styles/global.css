@@ -1,0 +1,367 @@
+/* ---------------------------------------------------------------
+   Tokens
+
+   The page is a sheet of typing paper. One face at one size, ragged
+   right, sixty-five characters to the line. The only colour that is
+   not ink is the ballpoint used for links -- the one thing added by
+   hand after the page came out of the machine.
+   --------------------------------------------------------------- */
+
+:root {
+  --paper: #e9e4d3; /* cheap bond gone a little yellow */
+  --ink: #000000;
+  --ink-faded: #625d50; /* worn ribbon -- dates, leaders, secondary */
+  --pen: #2340a0; /* ballpoint */
+
+  --mono: 'Courier Prime', 'Courier New', Courier, monospace;
+  --measure: 65ch;
+  --line: 1.5;
+}
+
+/* ---------------------------------------------------------------
+   Reset
+   --------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body,
+h1,
+h2,
+h3,
+p,
+figure,
+blockquote,
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ---------------------------------------------------------------
+   The sheet
+   --------------------------------------------------------------- */
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 1.0625rem;
+  line-height: var(--line);
+  -webkit-font-smoothing: antialiased;
+  padding: 2.5rem 1.25rem 6rem;
+}
+
+@media (min-width: 52rem) {
+  body {
+    padding: 4.5rem 3rem 9rem 7vw;
+  }
+}
+
+.shell {
+  max-width: var(--measure);
+}
+
+::selection {
+  background: var(--pen);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--pen);
+  outline-offset: 3px;
+}
+
+/* Links: underlined in pen. */
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--pen);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  color: var(--pen);
+}
+
+/* ---------------------------------------------------------------
+   Masthead -- the block a typist puts at the top of a submission
+   --------------------------------------------------------------- */
+
+.masthead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem 3ch;
+  max-width: var(--measure);
+  margin-bottom: 4.5rem;
+}
+
+.masthead__who {
+  line-height: var(--line);
+}
+
+.masthead__name {
+  text-decoration: none;
+}
+
+.masthead__name:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--pen);
+}
+
+.masthead__place {
+  color: var(--ink-faded);
+}
+
+.masthead nav a[aria-current='page'] {
+  color: var(--pen);
+}
+
+/* ---------------------------------------------------------------
+   Epigraph -- just the first thing typed on the page
+   --------------------------------------------------------------- */
+
+.epigraph {
+  max-width: var(--measure);
+  margin-bottom: 3.75rem;
+}
+
+/* ---------------------------------------------------------------
+   Contents -- a typed table of contents with dot leaders
+   --------------------------------------------------------------- */
+
+.toc {
+  list-style: none;
+  max-width: var(--measure);
+}
+
+.toc li {
+  display: flex;
+  align-items: baseline;
+  gap: 0 1ch;
+  margin-bottom: 0.75rem;
+}
+
+.toc__title {
+  min-width: 0;
+  text-decoration: none;
+}
+
+.toc__title:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--pen);
+}
+
+.toc__leader {
+  flex: 1 1 0;
+  min-width: 3ch;
+  overflow: hidden;
+  white-space: nowrap;
+  color: var(--ink-faded);
+}
+
+.toc__leader::before {
+  content: '. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .';
+}
+
+.toc__year {
+  color: var(--ink-faded);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 40rem) {
+  .toc li {
+    display: block;
+    margin-bottom: 1.1rem;
+  }
+
+  .toc__leader {
+    display: none;
+  }
+
+  .toc__year {
+    display: block;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Essay
+   --------------------------------------------------------------- */
+
+.essay__title {
+  font-size: 1em;
+  font-weight: 400;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  margin-bottom: 1.5rem;
+}
+
+.essay__standfirst {
+  color: var(--ink-faded);
+  margin-bottom: 1.5rem;
+}
+
+.essay__date {
+  color: var(--ink-faded);
+}
+
+/* ---------------------------------------------------------------
+   Prose -- what markdown becomes on this machine
+   --------------------------------------------------------------- */
+
+.prose {
+  max-width: var(--measure);
+  margin-top: 1.5rem;
+}
+
+/* Paragraphs are separated by a blank line and never indented. */
+.prose p {
+  margin-bottom: calc(1em * var(--line));
+}
+
+/* No italics on a typewriter. You underline. */
+.prose em {
+  font-style: normal;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+/* No bold either. You strike the key twice. */
+.prose strong {
+  font-weight: 400;
+  text-shadow: 0.045em 0 0 currentColor;
+}
+
+/* A mistake gets a row of x's typed over it. Mono means they line up. */
+.prose del {
+  display: inline-block;
+  position: relative;
+  text-decoration: none;
+}
+
+.prose del::after {
+  content: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Section headings: same size, underlined, a blank line above. */
+.prose h2,
+.prose h3 {
+  font-size: 1em;
+  font-weight: 400;
+  margin: calc(2em * var(--line)) 0 calc(1em * var(--line));
+}
+
+.prose h2 {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+/* A quotation is indented five spaces and left alone. */
+.prose blockquote {
+  padding-left: 5ch;
+  margin-bottom: calc(1em * var(--line));
+}
+
+.prose blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.prose ul {
+  list-style-type: '- ';
+  padding-left: 2ch;
+  margin-bottom: calc(1em * var(--line));
+}
+
+.prose ol {
+  padding-left: 4ch;
+  margin-bottom: calc(1em * var(--line));
+}
+
+/* Section break: three asterisks, the way it's done on the page. */
+.prose hr {
+  border: 0;
+  margin: calc(1em * var(--line)) 0;
+  color: var(--ink);
+}
+
+.prose hr::before {
+  content: '*    *    *';
+  display: block;
+}
+
+.prose code,
+.prose pre {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.prose pre {
+  padding-left: 5ch;
+  overflow-x: auto;
+  margin-bottom: calc(1em * var(--line));
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---------------------------------------------------------------
+   Fragments -- dated entries, one after another, like a notebook
+   --------------------------------------------------------------- */
+
+.fragment {
+  max-width: var(--measure);
+}
+
+.fragment + .fragment {
+  margin-top: calc(3em * var(--line));
+}
+
+.fragment__date {
+  display: block;
+  color: var(--ink-faded);
+}
+
+.fragment__title {
+  font-size: 1em;
+  font-weight: 400;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.fragment .prose {
+  margin-top: calc(1em * var(--line));
+}
+
+.fragment .prose > :last-child {
+  margin-bottom: 0;
+}
+
+/* ---------------------------------------------------------------
+   Sign-off
+   --------------------------------------------------------------- */
+
+.colophon {
+  max-width: var(--measure);
+  margin-top: 6rem;
+  color: var(--ink-faded);
+}

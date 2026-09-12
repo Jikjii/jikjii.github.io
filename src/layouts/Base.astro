@@ -1,0 +1,64 @@
+---
+import '../styles/global.css';
+import { site, href } from '../site';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = site.description } = Astro.props;
+// Double hyphen in the tab title too. It's a typewriter all the way down.
+const pageTitle = title ? `${title} -- ${site.title}` : site.title;
+const path = Astro.url.pathname.replace(/\/$/, '');
+const isCurrent = (p: string) => path === href(p).replace(/\/$/, '');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={Astro.url.href} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={site.title}
+      href={href('/rss.xml')}
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital@0;1&display=swap"
+    />
+  </head>
+  <body>
+    <header class="masthead">
+      <div class="masthead__who">
+        <a class="masthead__name" href={href('/')}>{site.title}</a><br />
+        <span class="masthead__place">{site.place}</span>
+      </div>
+      <nav>
+        <a href={href('/')} aria-current={isCurrent('/') ? 'page' : undefined}>essays</a>
+        {' / '}
+        <a href={href('/fragments')} aria-current={isCurrent('/fragments') ? 'page' : undefined}>fragments</a>
+        {' / '}
+        <a href={href('/rss.xml')}>feed</a>
+      </nav>
+    </header>
+
+    <main class="shell">
+      <slot />
+    </main>
+
+    <footer class="colophon">
+      {site.title} is a pen name.
+    </footer>
+  </body>
+</html>
