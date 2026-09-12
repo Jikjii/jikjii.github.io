@@ -1,26 +1,31 @@
 # alfonso mcentire
-
-essays and fragments, typed. astro, static, deployed to github pages via
-actions.
-
+ 
+essays and fragments, typed. live at https://jikjii.github.io
+ 
+astro, static, one typeface at one size, deployed by github actions on
+every push to `main`.
+ 
 ## run it
-
+ 
 ```bash
 npm install
-npm run dev      # localhost:4321
+npm run dev      # http://localhost:4321
 npm run build    # -> dist/
-npm run preview  # serve dist/ locally, base path included
+npm run preview  # serve dist/ locally
 ```
-
+ 
 ## writing
-
+ 
 | put a file in | to get |
 |---|---|
-| `src/essays/*.md` | a page at `/essays/<filename>`, listed on the front page |
-| `src/fragments/*.md` | a dated block on the single `/fragments` page |
-
+| `src/essays/<slug>.md` | a page at `/essays/<slug>`, listed on the front page |
+| `src/fragments/<date>.md` | a dated block on the single `/fragments` page |
+ 
+the filename is the url. rename a published piece and every link to it
+breaks.
+ 
 essay frontmatter:
-
+ 
 ```yaml
 ---
 title: required
@@ -31,64 +36,92 @@ tags: [optional]
 draft: false              # true keeps it off the contents page and out of the feed
 ---
 ```
-
-fragment frontmatter is `date` (required) and `title` (optional).
-
-the schema in `src/content.config.ts` is enforced at build time. a bad date
-or a missing title fails the build instead of producing a broken index.
-
+ 
+fragment frontmatter is `date` (required) and `title` (optional). most
+fragments should not have a title.
+ 
+the schema in `src/content.config.ts` is enforced at build time. a bad
+date or a missing title fails the build instead of quietly producing a
+broken index.
+ 
 ## how to type
-
-the site renders markdown the way a manual typewriter would have. these are
-the conventions:
-
+ 
+the site renders markdown the way a manual typewriter would have.
+ 
 | you type | it becomes |
 |---|---|
-| `_underlined_` or `*underlined*` | underlined. there are no italics. |
-| `**double-struck**` | the same weight, overtyped slightly darker. no bold. |
-| `~~mistake~~` | a row of x's typed over the word |
+| `_this_` or `*this*` | underlined. there are no italics. |
+| `**this**` | the same weight, struck twice so it comes out darker. no bold. |
+| `~~this~~` | a row of x's typed over the word |
 | `--` | stays `--`. no em dashes. |
-| `"quotes"` | stay straight. nothing is smartened. |
+| `"this"` | stays straight. nothing is smartened. |
 | `* * *` on its own line | a section break |
-| `> quoted` | indented five spaces, nothing else |
-| `## heading` | same size, underlined |
-
-everything is one size. titles are set apart by whitespace and an underline,
-not by scale.
-
+| `> this` | indented five spaces, nothing else |
+| `## this` | same size as the text, underlined |
+ 
+everything is one size. a title is set apart by whitespace and an
+underline, not by scale. paragraphs are separated by a blank line and
+never indented. lines run sixty-five characters.
+ 
+## house rules
+ 
+these are for the writer, not the reader. the reader gets the page.
+ 
+- write what is in front of you. the day job, the commute, the code, the
+  apartment, the things built that nobody asked for. specifics or nothing.
+  a piece with attitude and no concrete nouns gets deleted.
+- no consolation and no sermon. the reader is not the target. write it
+  true from where you sit and the right people will find it.
+- fragments are the night register: short, no argument, dated. essays are
+  the view from a distance: an argument that finds the reader's line,
+  crosses it, and brings them back glad they came. a piece that only
+  disturbs is a tantrum. a piece that only argues is a tract.
+- do not resolve the slide between enduring it and watching it. write the
+  slide.
+- the writers this owes something to are never named on the site. if it
+  is working, people will hear them anyway.
+- `draft: true` until it is done. nothing goes up half-typed.
 ## the alter ego
-
-`src/site.ts` holds the pen name, the second masthead line, and the epigraph
-that opens the front page. the footer says the name is a pen name -- keep
-that or remove it, but decide on purpose.
-
-the git commit author is a separate question from the pen name. `git config
-user.name` and `user.email` in this repo control what shows on github's
-commit history.
-
+ 
+`src/site.ts` holds everything about the name:
+ 
+| field | what it does |
+|---|---|
+| `title` | the masthead, the tab title, the feed name |
+| `place` | the second masthead line. currently `address withheld`. |
+| `epigraph` | the first thing on the front page. one line. |
+| `description` | meta description and feed subtitle |
+ 
+the footer says the name is a pen name. keep it or cut it, but decide on
+purpose -- it is the difference between a persona and a deception.
+ 
+the git commit author is separate from the pen name. `git config
+user.name` and `user.email` in this repo control what github shows in the
+history. the site and the commit log are two different identities and
+can be set independently.
+ 
 ## deploying
-
-push to `main`. `.github/workflows/deploy.yml` builds and deploys.
-
-one-time setup in the repo: settings -> pages -> source -> github actions.
-
-## renaming the repo to `jikjii.github.io`
-
-gets you `https://jikjii.github.io` instead of a doubled path.
-
-1. settings -> general -> rename to `jikjii.github.io`
-2. in `astro.config.mjs`, delete the `base` line
-3. `git remote set-url origin git@github.com:jikjii/jikjii.github.io.git`
-
-every internal link goes through `href()` in `src/site.ts`, which reads
-`import.meta.env.BASE_URL`, so nothing else changes.
-
+ 
+push to `main`. `.github/workflows/deploy.yml` builds and deploys. about
+a minute from push to live.
+ 
+repo settings -> pages -> source is set to **github actions**. if that
+ever gets flipped back to "deploy from a branch", the workflow will run
+green and its output will be thrown away.
+ 
+the feed is at `/rss.xml`. browsers show it as raw xml, which is correct
+-- it is for feed readers, not people. the `<link rel="alternate">` in the
+page head lets readers auto-discover it, so the nav link is optional.
+ 
 ## custom domain
-
-add `public/CNAME` containing the bare domain, point a cname record at
-`jikjii.github.io`, enable https under settings -> pages. drop `base` as
-above.
-
+ 
+add `public/CNAME` containing only the bare domain, point a cname record
+at `jikjii.github.io` plus the four github pages `A` records at the apex,
+then settings -> pages -> custom domain and enforce https.
+ 
 ## where the design lives
-
-all of it is `src/styles/global.css`. four colours, one typeface, one size.
+ 
+all of it is `src/styles/global.css`. four colours, one typeface, one
+size. the layout is `src/layouts/Base.astro`. that is the whole visual
+system and it should stay that small.
+ 
